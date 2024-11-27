@@ -1,3 +1,10 @@
+#Application that allows users to record and manage their daily expenses. Users can input details such
+#as the amount spent, category (e.g., food, transportation, entertainment), and date. The application
+#should also allow users to view their spending history, categorize expenses, and generate reports
+#summarizing their spending habits. Advanced features might include setting a budget, receiving alerts
+#when nearing budget limits, and providing visualizations such as pie charts to represent spending
+#distribution.
+
 import json
 from datetime import datetime
 import matplotlib.pyplot as plt
@@ -20,7 +27,7 @@ def save_data(data):
         json.dump(data, file, indent=4)  # Save data to JSON file
 
 
-# Add a new expense
+# Task 1 Add a new expense
 def add_expense(data):
     amount = float(input("Enter the amount spent: "))
     category = input("Enter the category (e.g., food, transport, etc.): ")
@@ -35,7 +42,7 @@ def add_expense(data):
     print("Expense added successfully!")
 
 
-# View spending history
+# Task 2 View spending history
 def view_history(data):
     if len(data["expenses"]) == 0:
         print("No expenses recorded yet.")
@@ -46,7 +53,7 @@ def view_history(data):
         print(f"Date: {expense['date']}, Category: {expense['category']}, Amount: ${expense['amount']:.2f}")
 
 
-# Categorize expenses
+# Task 2.1 Categorize expenses
 def categorize_expenses(data):
     category_totals = {}
 
@@ -66,7 +73,7 @@ def categorize_expenses(data):
     return category_totals
 
 
-# Generate spending report
+#  Task 2.3 Generate spending report
 def generate_report(data):
     categories = categorize_expenses(data)
 
@@ -82,7 +89,7 @@ def generate_report(data):
     plt.show()
 
 
-# Set a budget
+#  Task 3 Set a budget
 def set_budget(data):
     budget = float(input("Enter your budget for the month: "))
     data["budget"] = budget
@@ -90,7 +97,7 @@ def set_budget(data):
     print(f"Your budget is set to ${budget:.2f}.")
 
 
-# Check budget status
+# Task 3.1 Check budget status
 def check_budget(data):
     total_spent = sum(expense["amount"] for expense in data["expenses"])
     budget = data["budget"]
@@ -103,7 +110,7 @@ def check_budget(data):
         print(f"Your spending is under control. You spent ${total_spent:.2f} out of ${budget:.2f}.")
 
 
-# Main menu
+#  Finalize Main menu
 def main():
     data = load_data()  # Load saved data or initialize
 
