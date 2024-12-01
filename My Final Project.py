@@ -12,38 +12,40 @@ import matplotlib.pyplot as plt
 # File to save data
 DATA_FILE = "expenses.json"
 
-
-# Load existing data or initialize
+# Load data and clear previous expenses
 def load_data():
-    try:
-        with open(DATA_FILE, "r") as file:
-            return json.load(file)  # Load data from JSON file
-    except FileNotFoundError:
-        return {"expenses": [], "budget": 0}  # Initialize if file not found
+    """Always start with an empty expense list to clear previous data."""
+    print("Previous expenses will be cleared as the program starts.")
+    data = {"expenses": [], "budget": 0}  # Initialize fresh data
+    save_data(data)  # Save the cleared data immediately
+    return data
 
 
 def save_data(data):
+    """Save data to a JSON file."""
     with open(DATA_FILE, "w") as file:
-        json.dump(data, file, indent=4)  # Save data to JSON file
+        json.dump(data, file, indent=4)
 
 
-# Task 1 Add a new expense
+# Add a new expense
 def add_expense(data):
+    """Add an expense to the tracker."""
     amount = float(input("Enter the amount spent: "))
     category = input("Enter the category (e.g., food, transport, etc.): ")
-    date = input("Enter the date (DD-MM-YYYY, or press Enter for today): ")
-
+    date = input("Enter the date (YYYY-MM-DD, or press Enter for today): ")
+    
     if date == "":
-        date = datetime.now().strftime("%d-%m-%y")
-
+        date = datetime.now().strftime("%Y-%m-%d")
+    
     expense = {"amount": amount, "category": category, "date": date}
     data["expenses"].append(expense)  # Add expense to list
     save_data(data)  # Save updated data
     print("Expense added successfully!")
 
 
-# Task 2 View spending history
+# View spending history
 def view_history(data):
+    """Display all recorded expenses."""
     if len(data["expenses"]) == 0:
         print("No expenses recorded yet.")
         return
@@ -53,30 +55,32 @@ def view_history(data):
         print(f"Date: {expense['date']}, Category: {expense['category']}, Amount: ${expense['amount']:.2f}")
 
 
-# Task 2.1 Categorize expenses
+# Categorize expenses
 def categorize_expenses(data):
+    """Group expenses by category and display totals."""
     category_totals = {}
-
+    
     for expense in data["expenses"]:
         category = expense["category"]
         amount = expense["amount"]
-
+        
         if category not in category_totals:
             category_totals[category] = 0
-
+        
         category_totals[category] += amount
-
+    
     print("\nExpenses by Category:")
     for category, total in category_totals.items():
         print(f"{category}: ${total:.2f}")
-
+    
     return category_totals
 
 
-#  Task 2.3 Generate spending report
+# Generate spending report
 def generate_report(data):
+    """Create a pie chart showing spending distribution."""
     categories = categorize_expenses(data)
-
+    
     if len(categories) == 0:
         print("No expenses to show.")
         return
@@ -89,19 +93,21 @@ def generate_report(data):
     plt.show()
 
 
-#  Task 3 Set a budget
+# Set a budget
 def set_budget(data):
+    """Set a monthly budget."""
     budget = float(input("Enter your budget for the month: "))
     data["budget"] = budget
     save_data(data)
     print(f"Your budget is set to ${budget:.2f}.")
 
 
-# Task 3.1 Check budget status
+# Check budget status
 def check_budget(data):
+    """Check how much of the budget has been spent."""
     total_spent = sum(expense["amount"] for expense in data["expenses"])
     budget = data["budget"]
-
+    
     if budget == 0:
         print("You haven't set a budget yet!")
     elif total_spent >= budget:
@@ -110,10 +116,11 @@ def check_budget(data):
         print(f"Your spending is under control. You spent ${total_spent:.2f} out of ${budget:.2f}.")
 
 
-#  Finalize Main menu
+# Main menu
 def main():
-    data = load_data()  # Load saved data or initialize
-
+    """Main program loop."""
+    data = load_data()  # Load saved data and clear previous expenses
+    
     while True:
         print("\nExpense Manager")
         print("1. Add Expense")
@@ -123,9 +130,9 @@ def main():
         print("5. Set Budget")
         print("6. Check Budget")
         print("7. Exit")
-
+        
         choice = input("Enter your choice: ")
-
+        
         if choice == "1":
             add_expense(data)
         elif choice == "2":
@@ -148,3 +155,4 @@ def main():
 # Start the program
 if __name__ == "__main__":
     main()
+
